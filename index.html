@@ -2,10 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OmarTalk</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>OmarTalk - Internet Radio</title>
 
 <style>
+:root {
+    --bg: #101827;
+    --panel: #1b293c;
+    --panel2: #24364d;
+    --accent: #27d7a1;
+    --text: #f3f7fc;
+    --muted: #9aabc0;
+    --danger: #ff6262;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -13,228 +24,344 @@
 body {
     margin: 0;
     padding: 20px;
-    background: #101820;
-    color: white;
+    background: var(--bg);
+    color: var(--text);
     font-family: Arial, sans-serif;
 }
 
-.app {
-    max-width: 500px;
-    margin: 25px auto;
-    padding: 22px;
-    background: #1c2935;
-    border: 1px solid #35495c;
-    border-radius: 16px;
+.container {
+    max-width: 650px;
+    margin: auto;
 }
 
-h1 {
+header {
     text-align: center;
-    color: #40d9a2;
-    margin-top: 0;
+    margin-bottom: 25px;
 }
 
-.subtitle {
-    text-align: center;
-    color: #a9bac8;
+header h1 {
+    margin-bottom: 5px;
+    color: var(--accent);
+    font-size: 32px;
+}
+
+header p {
+    color: var(--muted);
+}
+
+.card {
+    background: var(--panel);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 15px;
 }
 
 label {
     display: block;
-    margin-top: 17px;
-    margin-bottom: 7px;
+    margin-bottom: 8px;
+    color: var(--muted);
 }
 
 input, select, button {
     width: 100%;
-    padding: 13px;
-    border-radius: 8px;
-    border: 1px solid #526575;
+    padding: 14px;
+    border: none;
+    border-radius: 9px;
     font-size: 16px;
 }
 
 input, select {
-    background: #101820;
+    background: var(--panel2);
     color: white;
+    margin-bottom: 15px;
+    outline: none;
 }
 
 button {
-    margin-top: 12px;
-    border: none;
-    background: #20b985;
-    color: white;
+    background: var(--accent);
+    color: #071a17;
     font-weight: bold;
     cursor: pointer;
+    margin-top: 8px;
 }
 
 button:disabled {
-    opacity: .4;
+    opacity: .45;
     cursor: not-allowed;
 }
 
-.leave {
-    background: #bd4545;
+.secondary {
+    background: var(--panel2);
+    color: white;
+}
+
+.danger {
+    background: var(--danger);
+    color: white;
+}
+
+.status {
+    padding: 12px;
+    background: var(--panel2);
+    border-radius: 9px;
+    margin-top: 12px;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.status.online {
+    color: var(--accent);
+}
+
+#participants {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#participants li {
+    padding: 12px;
+    background: var(--panel2);
+    margin-bottom: 8px;
+    border-radius: 8px;
 }
 
 .ptt {
-    background: #d64b4b;
-    height: 90px;
-    font-size: 22px;
-    border-radius: 50px;
+    min-height: 100px;
+    font-size: 23px;
+    background: #168b6c;
+    color: white;
     touch-action: none;
     user-select: none;
 }
 
 .ptt.active {
-    background: #20b985;
-}
-
-.status {
-    padding: 12px;
-    margin-top: 15px;
-    background: #101820;
-    border-radius: 8px;
-    color: #40d9a2;
-    overflow-wrap: anywhere;
-}
-
-.panel {
-    margin-top: 18px;
-    padding: 13px;
-    background: #101820;
-    border-radius: 8px;
+    background: #d94d4d;
 }
 
 .small {
-    color: #a9bac8;
+    color: var(--muted);
     font-size: 13px;
+    line-height: 1.6;
 }
 
-#received {
+#receivedMorse {
+    min-height: 70px;
+    padding: 12px;
+    background: var(--panel2);
+    border-radius: 8px;
     overflow-wrap: anywhere;
-    min-height: 25px;
 }
 
-audio {
+#receivedMorse p {
+    margin: 5px 0;
+}
+
+.hidden {
     display: none;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 25px;
 }
-
-td, th {
-    padding: 7px;
-    border-bottom: 1px solid #35495c;
-    text-align: left;
-}
-
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="container">
 
-<h1>📻 OmarTalk</h1>
-<p class="subtitle">Worldwide Internet Walkie-Talkie</p>
+<header>
+    <h1>📻 OmarTalk</h1>
+    <p>Internet Walkie-Talkie</p>
+</header>
 
-<label for="frequency">Virtual Frequency (MHz)</label>
-<input id="frequency"
-       type="number"
-       min="1"
-       max="1000"
-       step="0.001"
-       value="145.500">
+<div class="card">
 
-<label for="mode">Transmission Mode</label>
-<select id="mode">
-    <option value="voice">Voice</option>
-    <option value="morse">Morse Code</option>
-</select>
+    <label for="frequency">Virtual Frequency (MHz)</label>
 
-<button id="join">JOIN FREQUENCY</button>
-<button id="leave" class="leave" disabled>LEAVE FREQUENCY</button>
+    <input
+        id="frequency"
+        type="number"
+        min="1"
+        max="1000"
+        step="0.001"
+        value="145.500"
+    >
 
-<div class="status" id="status">
-    Status: Disconnected
-</div>
+    <label for="mode">Transmission Method</label>
 
-<div class="panel">
-    <b>Participants</b>
-    <p id="participants">0 connected</p>
+    <select id="mode">
+        <option value="voice">🎙️ Voice</option>
+        <option value="morse">📟 Morse Code</option>
+    </select>
+
+    <button id="joinButton">Join Frequency</button>
+    <button id="leaveButton" class="danger hidden">Leave Frequency</button>
+
+    <div id="status" class="status">
+        Disconnected
+    </div>
+
     <p class="small">
-        Maximum 4 remote connections.
+        These are virtual internet frequencies, not real radio transmissions.
     </p>
+
 </div>
 
-<div id="voicePanel" class="panel" hidden>
-    <b>Push To Talk</b>
-    <button id="ptt" class="ptt" disabled>
+
+<div class="card">
+
+    <h3>👥 Participants</h3>
+
+    <p id="participantCount">0 / 4 remote participants</p>
+
+    <ul id="participants"></ul>
+
+</div>
+
+
+<!-- VOICE TRANSMISSION -->
+
+<div id="voicePanel" class="card hidden">
+
+    <h3>🎙️ Voice Radio</h3>
+
+    <button id="pttButton" class="ptt" disabled>
         HOLD TO TALK
     </button>
+
     <p class="small">
-        Hold the button while speaking. Release to stop transmitting.
+        Hold the button to transmit your voice.
+        Release it to stop transmitting.
     </p>
+
 </div>
 
-<div id="morsePanel" class="panel" hidden>
-    <b>Morse Transmission</b>
+
+<!-- MORSE TRANSMISSION -->
+
+<div id="morsePanel" class="card hidden">
+
+    <h3>📟 Morse Transmitter</h3>
 
     <label for="morseInput">Message to encode</label>
-    <input id="morseInput"
-           type="text"
-           maxlength="100"
-           placeholder="Type your message">
 
-    <button id="sendMorse">TRANSMIT MORSE</button>
+    <input
+        id="morseInput"
+        type="text"
+        maxlength="100"
+        placeholder="Type your Morse message..."
+    >
+
+    <button id="sendMorseButton">
+        Transmit Morse
+    </button>
+
+    <div class="status">
+        <strong>Encoded Morse:</strong>
+        <p id="encodedPreview">...</p>
+    </div>
 
     <p class="small">
-        Your message is converted into Morse code before transmission.
+        Your message is converted into Morse code and transmitted
+        through a WebRTC DataChannel.
     </p>
 
-    <hr>
-
-    <b>Received Morse</b>
-    <p id="received">Nothing received yet.</p>
-
-    <b>Decoded Message</b>
-    <p id="decoded">---</p>
 </div>
 
-<div class="panel">
-    <b>Morse Learning Chart</b>
 
-    <table>
-        <tr><th>Letter</th><th>Code</th><th>Letter</th><th>Code</th></tr>
-        <tr><td>A</td><td>.-</td><td>N</td><td>-.</td></tr>
-        <tr><td>B</td><td>-...</td><td>O</td><td>---</td></tr>
-        <tr><td>C</td><td>-.-.</td><td>P</td><td>.--.</td></tr>
-        <tr><td>D</td><td>-..</td><td>Q</td><td>--.-</td></tr>
-        <tr><td>E</td><td>.</td><td>R</td><td>.-.</td></tr>
-        <tr><td>F</td><td>..-.</td><td>S</td><td>...</td></tr>
-        <tr><td>G</td><td>--.</td><td>T</td><td>-</td></tr>
-        <tr><td>H</td><td>....</td><td>U</td><td>..-</td></tr>
-        <tr><td>I</td><td>..</td><td>V</td><td>...-</td></tr>
-        <tr><td>J</td><td>.---</td><td>W</td><td>.--</td></tr>
-        <tr><td>K</td><td>-.-</td><td>X</td><td>-..-</td></tr>
-        <tr><td>L</td><td>.-..</td><td>Y</td><td>-.--</td></tr>
-        <tr><td>M</td><td>--</td><td>Z</td><td>--..</td></tr>
-    </table>
-</div>
+<!-- RECEIVED MORSE IS AVAILABLE IN BOTH MODES -->
+
+<div class="card">
+
+    <h3>📨 Received Morse</h3>
+
+    <div id="receivedMorse">
+        <p class="small">Waiting for Morse transmissions...</p>
+    </div>
 
 </div>
 
+
+<div class="card">
+
+    <h3>🔊 Audio</h3>
+
+    <button id="enableAudioButton" class="secondary">
+        Enable Audio Playback
+    </button>
+
+    <p class="small">
+        If you cannot hear incoming voice or Morse tones,
+        tap this button.
+    </p>
+
+    <div id="remoteAudio"></div>
+
+</div>
+
+
+<div class="card">
+
+    <h3>📖 Morse Reference</h3>
+
+    <p class="small">
+        A = .- &nbsp; B = -... &nbsp; C = -.-.
+        <br>
+        D = -.. &nbsp; E = . &nbsp; F = ..-.
+        <br>
+        G = --. &nbsp; H = .... &nbsp; I = ..
+        <br>
+        J = .--- &nbsp; K = -.- &nbsp; L = .-..
+        <br>
+        M = -- &nbsp; N = -. &nbsp; O = ---
+        <br>
+        P = .--. &nbsp; Q = --.- &nbsp; R = .-.
+        <br>
+        S = ... &nbsp; T = - &nbsp; U = ..-
+        <br>
+        V = ...- &nbsp; W = .-- &nbsp; X = -..-
+        <br>
+        Y = -.-- &nbsp; Z = --..
+        <br><br>
+        0 = ----- &nbsp; 1 = .---- &nbsp; 2 = ..---
+        <br>
+        3 = ...-- &nbsp; 4 = ....- &nbsp; 5 = .....
+        <br>
+        6 = -.... &nbsp; 7 = --... &nbsp; 8 = ---..
+        <br>
+        9 = ----.
+    </p>
+
+</div>
+
+
+<footer>
+    OmarTalk | WebRTC Internet Radio
+</footer>
+
+</div>
+
+
+<!-- MQTT SIGNALING LIBRARY -->
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 
-<script>
-/* ==================================
-   OMARTALK WEBRTC CONFIGURATION
-================================== */
 
-// Google STUN servers ONLY.
-const ICE_SERVERS = [
+<script>
+
+/* =========================================
+   CONFIGURATION
+========================================= */
+
+const MAX_PEERS = 4;
+
+const MQTT_BROKER = "wss://broker.emqx.io:8084/mqtt";
+
+const STUN_SERVERS = [
     { urls: "stun:stun.l.google.com:19302" },
     { urls: "stun:stun1.l.google.com:19302" },
     { urls: "stun:stun2.l.google.com:19302" },
@@ -242,97 +369,500 @@ const ICE_SERVERS = [
     { urls: "stun:stun4.l.google.com:19302" }
 ];
 
-// MQTT is used for signaling, not audio.
-const MQTT_SERVER = "wss://broker.emqx.io:8084/mqtt";
+const MORSE = {
+    A: ".-",    B: "-...",  C: "-.-.",
+    D: "-..",   E: ".",     F: "..-.",
+    G: "--.",   H: "....",  I: "..",
+    J: ".---",  K: "-.-",   L: ".-..",
+    M: "--",    N: "-.",    O: "---",
+    P: ".--.",  Q: "--.-",  R: ".-.",
+    S: "...",   T: "-",     U: "..-",
+    V: "...-",  W: ".--",   X: "-..-",
+    Y: "-.--",  Z: "--..",
 
-const MAX_PEERS = 4;
+    0: "-----", 1: ".----", 2: "..---",
+    3: "...--", 4: "....-", 5: ".....",
+    6: "-....", 7: "--...", 8: "---..",
+    9: "----."
+};
 
-let client = null;
-let localStream = null;
-let myId = crypto.randomUUID();
+const REVERSE_MORSE = {};
 
-let room = "";
-let topic = "";
-let currentMode = "";
-let peers = new Map();
-let joined = false;
+for (const [letter, code] of Object.entries(MORSE)) {
+    REVERSE_MORSE[code] = letter;
+}
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
 
 const $ = id => document.getElementById(id);
 
-function status(message) {
-    $("status").textContent = "Status: " + message;
+const joinButton = $("joinButton");
+const leaveButton = $("leaveButton");
+const statusBox = $("status");
+const frequencyInput = $("frequency");
+const modeInput = $("mode");
+
+const voicePanel = $("voicePanel");
+const morsePanel = $("morsePanel");
+
+const pttButton = $("pttButton");
+
+const morseInput = $("morseInput");
+const sendMorseButton = $("sendMorseButton");
+const encodedPreview = $("encodedPreview");
+
+const receivedMorse = $("receivedMorse");
+
+const participantList = $("participants");
+const participantCount = $("participantCount");
+
+const remoteAudio = $("remoteAudio");
+
+
+/* =========================================
+   STATE
+========================================= */
+
+let myId = makeId();
+
+let myMode = "voice";
+let myFrequency = "";
+
+let mqttClient = null;
+
+let localStream = null;
+
+let audioContext = null;
+
+let joined = false;
+let pttActive = false;
+
+const peers = new Map();
+
+const pendingCandidates = new Map();
+
+const disconnectTimers = new Map();
+
+
+function makeId() {
+
+    if (crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+
+    return "user_" +
+        Math.random().toString(36).slice(2) +
+        Date.now().toString(36);
 }
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+function setStatus(message, online = false) {
+
+    statusBox.textContent = message;
+
+    statusBox.classList.toggle("online", online);
+
+}
+
 
 function updateParticipants() {
-    $("participants").textContent =
-        peers.size + " remote participant(s)";
+
+    participantList.innerHTML = "";
+
+    for (const [id, peer] of peers) {
+
+        const li = document.createElement("li");
+
+        li.textContent =
+            (peer.mode === "voice" ? "🎙️ " : "📟 ") +
+            id.slice(0, 8) +
+            " — " +
+            (peer.connected ? "Connected" : "Connecting");
+
+        participantList.appendChild(li);
+
+    }
+
+    participantCount.textContent =
+        peers.size + " / " + MAX_PEERS + " remote participants";
+
 }
 
-/* ==================================
-   MORSE CODE
-================================== */
 
-const MORSE = {
-    A:".-", B:"-...", C:"-.-.", D:"-..",
-    E:".", F:"..-.", G:"--.", H:"....",
-    I:"..", J:".---", K:"-.-", L:".-..",
-    M:"--", N:"-.", O:"---", P:".--.",
-    Q:"--.-", R:".-.", S:"...", T:"-",
-    U:"..-", V:"...-", W:".--", X:"-..-",
-    Y:"-.--", Z:"--..",
-    0:"-----", 1:".----", 2:"..---",
-    3:"...--", 4:"....-", 5:".....",
-    6:"-....", 7:"--...", 8:"---..",
-    9:"----."
-};
+/* =========================================
+   AUDIO
+========================================= */
 
-const REVERSE = {};
+function ensureAudioContext() {
 
-for (const [letter, code] of Object.entries(MORSE)) {
-    REVERSE[code] = letter;
+    if (!audioContext) {
+
+        const AudioContextClass =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if (AudioContextClass) {
+            audioContext = new AudioContextClass();
+        }
+
+    }
+
+    if (audioContext && audioContext.state === "suspended") {
+        audioContext.resume().catch(() => {});
+    }
+
 }
+
+
+$("enableAudioButton").addEventListener("click", () => {
+
+    ensureAudioContext();
+
+    document.querySelectorAll("#remoteAudio audio").forEach(audio => {
+        audio.play().catch(() => {});
+    });
+
+});
+
+
+function attachRemoteAudio(id, stream) {
+
+    let audio = document.getElementById("audio_" + id);
+
+    if (!audio) {
+
+        audio = document.createElement("audio");
+
+        audio.id = "audio_" + id;
+
+        audio.autoplay = true;
+
+        audio.playsInline = true;
+
+        audio.controls = true;
+
+        remoteAudio.appendChild(audio);
+
+    }
+
+    audio.srcObject = stream;
+
+    audio.play().catch(() => {
+
+        setStatus(
+            "Connected. Tap Enable Audio Playback to hear participants.",
+            true
+        );
+
+    });
+
+}
+
+
+/* =========================================
+   MORSE ENCODING
+========================================= */
 
 function encodeMorse(text) {
-    return text.toUpperCase()
+
+    return text
+        .toUpperCase()
         .trim()
         .split(/\s+/)
-        .map(word =>
-            [...word]
+        .map(word => {
+
+            return word
+                .split("")
                 .map(char => MORSE[char] || "")
                 .filter(Boolean)
-                .join(" ")
-        )
+                .join(" ");
+
+        })
         .filter(Boolean)
         .join(" / ");
+
 }
+
 
 function decodeMorse(code) {
-    return code.split(" / ")
-        .map(word =>
-            word.split(" ")
-                .map(letter => REVERSE[letter] || "")
-                .join("")
-        )
+
+    return code
+        .split(" / ")
+        .map(word => {
+
+            return word
+                .split(" ")
+                .map(letter => REVERSE_MORSE[letter] || "")
+                .join("");
+
+        })
         .join(" ");
+
 }
 
-/* ==================================
-   WEBRTC PEER CONNECTIONS
-================================== */
 
-function sendSignal(message) {
-    if (!client || !client.connected) return;
+/* =========================================
+   MORSE TONE PLAYBACK
+========================================= */
 
-    client.publish(topic, JSON.stringify({
-        ...message,
-        from: myId
-    }));
+function playMorse(code) {
+
+    ensureAudioContext();
+
+    if (!audioContext) return;
+
+    const unit = 0.12;
+
+    let time = audioContext.currentTime + 0.05;
+
+    function beep(duration) {
+
+        const oscillator = audioContext.createOscillator();
+
+        const gain = audioContext.createGain();
+
+        oscillator.frequency.value = 650;
+
+        gain.gain.setValueAtTime(0.0001, time);
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.15,
+            time + 0.01
+        );
+
+        gain.gain.setValueAtTime(
+            0.15,
+            time + duration - 0.01
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            time + duration
+        );
+
+        oscillator.connect(gain);
+
+        gain.connect(audioContext.destination);
+
+        oscillator.start(time);
+
+        oscillator.stop(time + duration);
+
+    }
+
+    const words = code.split(" / ");
+
+    for (let w = 0; w < words.length; w++) {
+
+        const letters = words[w].split(" ");
+
+        for (let l = 0; l < letters.length; l++) {
+
+            const symbols = letters[l].split("");
+
+            for (let s = 0; s < symbols.length; s++) {
+
+                const duration =
+                    symbols[s] === "." ? unit : unit * 3;
+
+                beep(duration);
+
+                time += duration + unit;
+
+            }
+
+            time += unit * 2;
+
+        }
+
+        if (w < words.length - 1) {
+            time += unit * 4;
+        }
+
+    }
+
 }
 
-function createPeer(peerId, initiator) {
 
-    if (peers.has(peerId)) {
-        return peers.get(peerId);
+/* =========================================
+   RECEIVE MORSE
+========================================= */
+
+function receiveMorse(packet, sender) {
+
+    if (
+        !packet ||
+        typeof packet.code !== "string" ||
+        packet.code.length > 1000
+    ) {
+        return;
+    }
+
+    const decoded = decodeMorse(packet.code);
+
+    const item = document.createElement("div");
+
+    item.innerHTML = "";
+
+    const title = document.createElement("strong");
+
+    title.textContent = "From " + sender.slice(0, 8);
+
+    const codeLine = document.createElement("p");
+
+    codeLine.textContent = packet.code;
+
+    const decodedLine = document.createElement("p");
+
+    decodedLine.textContent = "Decoded: " + decoded;
+
+    item.appendChild(title);
+    item.appendChild(codeLine);
+    item.appendChild(decodedLine);
+
+    receivedMorse.prepend(item);
+
+    playMorse(packet.code);
+
+}
+
+
+/* =========================================
+   SEND MORSE
+========================================= */
+
+function transmitMorse() {
+
+    if (!joined) return;
+
+    const message = morseInput.value.trim();
+
+    if (!message) return;
+
+    const code = encodeMorse(message);
+
+    if (!code) {
+        setStatus("No supported letters or numbers found.");
+        return;
+    }
+
+    const packet = JSON.stringify({
+        type: "morse",
+        code: code
+    });
+
+    let sent = 0;
+
+    for (const peer of peers.values()) {
+
+        if (
+            peer.dataChannel &&
+            peer.dataChannel.readyState === "open"
+        ) {
+
+            peer.dataChannel.send(packet);
+
+            sent++;
+
+        }
+
+    }
+
+    if (sent === 0) {
+
+        setStatus(
+            "Morse encoded, but nobody is connected to receive it."
+        );
+
+        return;
+
+    }
+
+    receiveMorse(
+        { code: code },
+        "You"
+    );
+
+    morseInput.value = "";
+
+    encodedPreview.textContent = "...";
+
+    setStatus("Morse transmitted to " + sent + " participant(s).", true);
+
+}
+
+
+morseInput.addEventListener("input", () => {
+
+    encodedPreview.textContent =
+        encodeMorse(morseInput.value) || "...";
+
+});
+
+
+sendMorseButton.addEventListener("click", transmitMorse);
+
+morseInput.addEventListener("keydown", event => {
+
+    if (event.key === "Enter") {
+        transmitMorse();
+    }
+
+});
+
+
+/* =========================================
+   DATA CHANNEL
+========================================= */
+
+function setupDataChannel(peer, channel) {
+
+    peer.dataChannel = channel;
+
+    channel.onopen = () => {
+        updateParticipants();
+    };
+
+    channel.onmessage = event => {
+
+        try {
+
+            const packet = JSON.parse(event.data);
+
+            if (packet.type === "morse") {
+                receiveMorse(packet, peer.id);
+            }
+
+        } catch (error) {
+
+            console.warn("Invalid DataChannel packet", error);
+
+        }
+
+    };
+
+    channel.onclose = () => {
+        peer.dataChannel = null;
+    };
+
+}
+
+
+/* =========================================
+   PEER CONNECTION
+========================================= */
+
+function createPeer(id, remoteMode = "voice") {
+
+    if (peers.has(id)) {
+        return peers.get(id);
     }
 
     if (peers.size >= MAX_PEERS) {
@@ -340,302 +870,548 @@ function createPeer(peerId, initiator) {
     }
 
     const pc = new RTCPeerConnection({
-        iceServers: ICE_SERVERS
+        iceServers: STUN_SERVERS
     });
 
     const peer = {
-        pc,
-        channel: null,
-        candidates: [],
-        makingOffer: false
+        id: id,
+        mode: remoteMode,
+        pc: pc,
+        dataChannel: null,
+        connected: false
     };
 
-    peers.set(peerId, peer);
+    peers.set(id, peer);
+
     updateParticipants();
 
-    // Audio handling
+
+    // Voice users send audio.
+    // Morse users receive audio only.
+
     if (localStream) {
+
         localStream.getTracks().forEach(track => {
+
             pc.addTrack(track, localStream);
+
         });
+
     } else {
+
         pc.addTransceiver("audio", {
             direction: "recvonly"
         });
+
     }
 
+
+    // Incoming voice
+
     pc.ontrack = event => {
-        const audio = document.createElement("audio");
 
-        audio.autoplay = true;
-        audio.playsInline = true;
-        audio.srcObject = event.streams[0];
+        if (event.streams && event.streams[0]) {
 
-        document.body.appendChild(audio);
+            attachRemoteAudio(id, event.streams[0]);
 
-        audio.play().catch(() => {
-            status("Tap the page to enable audio playback.");
-        });
+        }
+
     };
 
-    // ICE candidate exchange
+
+    // ICE candidates
+
     pc.onicecandidate = event => {
+
         if (event.candidate) {
+
             sendSignal({
                 type: "candidate",
-                to: peerId,
+                to: id,
                 candidate: event.candidate
             });
+
         }
+
     };
 
+
+    // Connection state
+
     pc.onconnectionstatechange = () => {
-        status("Peer " + pc.connectionState);
+
+        if (pc.connectionState === "connected") {
+
+            peer.connected = true;
+
+            clearTimeout(disconnectTimers.get(id));
+
+            disconnectTimers.delete(id);
+
+            updateParticipants();
+
+        }
 
         if (
+            pc.connectionState === "disconnected" ||
             pc.connectionState === "failed" ||
             pc.connectionState === "closed"
         ) {
-            removePeer(peerId);
+
+            peer.connected = false;
+
+            updateParticipants();
+
+            if (pc.connectionState === "failed") {
+
+                removePeer(id);
+
+            } else if (pc.connectionState === "disconnected") {
+
+                const timer = setTimeout(() => {
+
+                    if (
+                        peers.has(id) &&
+                        pc.connectionState !== "connected"
+                    ) {
+                        removePeer(id);
+                    }
+
+                }, 12000);
+
+                disconnectTimers.set(id, timer);
+
+            }
+
         }
+
     };
 
-    // DataChannel for Morse
-    if (initiator) {
-        const channel = pc.createDataChannel("omartalk-morse");
-        setupDataChannel(peerId, channel);
-    }
+
+    // DataChannel is received when the other participant
+    // created it while making their offer.
 
     pc.ondatachannel = event => {
-        setupDataChannel(peerId, event.channel);
+
+        setupDataChannel(peer, event.channel);
+
     };
+
 
     return peer;
+
 }
 
-function setupDataChannel(peerId, channel) {
 
-    const peer = peers.get(peerId);
+/* =========================================
+   REMOVE PEER
+========================================= */
+
+function removePeer(id) {
+
+    const peer = peers.get(id);
+
     if (!peer) return;
 
-    peer.channel = channel;
+    clearTimeout(disconnectTimers.get(id));
 
-    channel.onopen = () => {
-        status("Connected to participant");
-    };
+    disconnectTimers.delete(id);
 
-    channel.onmessage = event => {
+    try {
+        peer.pc.close();
+    } catch (error) {}
 
-        let packet;
+    if (peer.dataChannel) {
 
         try {
-            packet = JSON.parse(event.data);
-        } catch {
-            return;
-        }
+            peer.dataChannel.close();
+        } catch (error) {}
 
-        if (packet.type === "morse") {
-            $("received").textContent = packet.code;
-            $("decoded").textContent = decodeMorse(packet.code);
-            playMorse(packet.code);
-        }
-    };
-}
-
-async function startOffer(peerId) {
-
-    let peer = peers.get(peerId);
-
-    if (!peer) {
-        peer = createPeer(peerId, true);
     }
 
-    if (!peer || peer.makingOffer) return;
+    const audio = document.getElementById("audio_" + id);
 
-    peer.makingOffer = true;
-
-    try {
-
-        if (peer.pc.signalingState !== "stable") return;
-
-        const offer = await peer.pc.createOffer();
-
-        await peer.pc.setLocalDescription(offer);
-
-        sendSignal({
-            type: "offer",
-            to: peerId,
-            description: peer.pc.localDescription
-        });
-
-    } catch (error) {
-        console.error("Offer error:", error);
-    } finally {
-        peer.makingOffer = false;
+    if (audio) {
+        audio.remove();
     }
-}
 
-async function handleOffer(message) {
-
-    const peer = createPeer(message.from, false);
-    if (!peer) return;
-
-    try {
-
-        await peer.pc.setRemoteDescription(message.description);
-
-        for (const candidate of peer.candidates) {
-            await peer.pc.addIceCandidate(candidate);
-        }
-
-        peer.candidates = [];
-
-        const answer = await peer.pc.createAnswer();
-
-        await peer.pc.setLocalDescription(answer);
-
-        sendSignal({
-            type: "answer",
-            to: message.from,
-            description: peer.pc.localDescription
-        });
-
-    } catch (error) {
-        console.error("Answer error:", error);
-    }
-}
-
-async function handleAnswer(message) {
-
-    const peer = peers.get(message.from);
-    if (!peer) return;
-
-    try {
-
-        await peer.pc.setRemoteDescription(message.description);
-
-        for (const candidate of peer.candidates) {
-            await peer.pc.addIceCandidate(candidate);
-        }
-
-        peer.candidates = [];
-
-    } catch (error) {
-        console.error("Answer processing error:", error);
-    }
-}
-
-async function handleCandidate(message) {
-
-    const peer = peers.get(message.from);
-    if (!peer) return;
-
-    try {
-
-        if (peer.pc.remoteDescription) {
-            await peer.pc.addIceCandidate(message.candidate);
-        } else {
-            peer.candidates.push(message.candidate);
-        }
-
-    } catch (error) {
-        console.error("ICE candidate error:", error);
-    }
-}
-
-function removePeer(peerId) {
-
-    const peer = peers.get(peerId);
-
-    if (peer) {
-        peer.pc.close();
-        peers.delete(peerId);
-    }
+    peers.delete(id);
 
     updateParticipants();
+
 }
 
-/* ==================================
-   SIGNALING / PARTICIPANT DISCOVERY
-================================== */
 
-function handleSignal(message) {
+/* =========================================
+   MQTT SIGNALING
+========================================= */
+
+function getTopic() {
+
+    return "omartalk/v1/" +
+        myFrequency.replace(".", "_");
+
+}
+
+
+function sendSignal(data) {
+
+    if (!mqttClient || !mqttClient.connected) {
+        return;
+    }
+
+    const message = {
+
+        ...data,
+
+        from: myId,
+
+        mode: myMode
+
+    };
+
+    mqttClient.publish(
+        getTopic(),
+        JSON.stringify(message),
+        { qos: 0, retain: false }
+    );
+
+}
+
+
+/* =========================================
+   OFFER CREATION
+========================================= */
+
+async function startOffer(id) {
+
+    const peer = peers.get(id);
+
+    if (!peer) return;
+
+    const pc = peer.pc;
+
+    if (pc.signalingState !== "stable") {
+        return;
+    }
+
+    try {
+
+        // The offerer creates the Morse DataChannel.
+
+        if (!peer.dataChannel) {
+
+            const channel = pc.createDataChannel("omartalk-morse", {
+                ordered: true
+            });
+
+            setupDataChannel(peer, channel);
+
+        }
+
+        const offer = await pc.createOffer();
+
+        await pc.setLocalDescription(offer);
+
+        sendSignal({
+
+            type: "offer",
+
+            to: id,
+
+            description: pc.localDescription
+
+        });
+
+    } catch (error) {
+
+        console.error("Offer error:", error);
+
+    }
+
+}
+
+
+/* =========================================
+   SIGNAL HANDLER
+========================================= */
+
+async function handleSignal(message) {
 
     if (!message || message.from === myId) return;
 
     if (message.to && message.to !== myId) return;
 
-    switch (message.type) {
 
-        case "discover":
+    // Someone entered our frequency.
 
-            // Reply so the joining phone can discover us.
+    if (message.type === "discover") {
+
+        sendSignal({
+
+            type: "hello",
+
+            to: message.from
+
+        });
+
+        return;
+
+    }
+
+
+    // Exchange participant information.
+
+    if (message.type === "hello") {
+
+        if (!peers.has(message.from)) {
+
+            if (peers.size >= MAX_PEERS) {
+                return;
+            }
+
+            if (myId < message.from) {
+
+                const peer = createPeer(
+                    message.from,
+                    message.mode
+                );
+
+                if (peer) {
+                    await startOffer(message.from);
+                }
+
+            }
+
+        }
+
+        return;
+
+    }
+
+
+    // Incoming WebRTC offer.
+
+    if (message.type === "offer") {
+
+        let peer = peers.get(message.from);
+
+        if (!peer) {
+
+            peer = createPeer(
+                message.from,
+                message.mode
+            );
+
+        }
+
+        if (!peer) return;
+
+        try {
+
+            await peer.pc.setRemoteDescription(
+                message.description
+            );
+
+            await applyPendingCandidates(message.from);
+
+            const answer = await peer.pc.createAnswer();
+
+            await peer.pc.setLocalDescription(answer);
+
             sendSignal({
-                type: "hello",
-                to: message.from
+
+                type: "answer",
+
+                to: message.from,
+
+                description: peer.pc.localDescription
+
             });
 
-            // Deterministic offer selection prevents both sides
-            // from trying to initiate at the same time.
-            if (myId < message.from) {
-                startOffer(message.from);
-            }
+        } catch (error) {
 
-            break;
+            console.error("Offer handling error:", error);
 
-        case "hello":
+        }
 
-            if (myId < message.from) {
-                startOffer(message.from);
-            }
+        return;
 
-            break;
-
-        case "offer":
-            handleOffer(message);
-            break;
-
-        case "answer":
-            handleAnswer(message);
-            break;
-
-        case "candidate":
-            handleCandidate(message);
-            break;
-
-        case "bye":
-            removePeer(message.from);
-            break;
     }
+
+
+    // Incoming answer.
+
+    if (message.type === "answer") {
+
+        const peer = peers.get(message.from);
+
+        if (!peer) return;
+
+        try {
+
+            await peer.pc.setRemoteDescription(
+                message.description
+            );
+
+            await applyPendingCandidates(message.from);
+
+        } catch (error) {
+
+            console.error("Answer error:", error);
+
+        }
+
+        return;
+
+    }
+
+
+    // Incoming ICE candidate.
+
+    if (message.type === "candidate") {
+
+        const peer = peers.get(message.from);
+
+        if (!peer || !peer.pc.remoteDescription) {
+
+            if (!pendingCandidates.has(message.from)) {
+                pendingCandidates.set(message.from, []);
+            }
+
+            pendingCandidates.get(message.from).push(
+                message.candidate
+            );
+
+            return;
+
+        }
+
+        try {
+
+            await peer.pc.addIceCandidate(
+                message.candidate
+            );
+
+        } catch (error) {
+
+            console.warn("ICE candidate error:", error);
+
+        }
+
+        return;
+
+    }
+
+
+    // Someone leaves.
+
+    if (message.type === "bye") {
+
+        removePeer(message.from);
+
+    }
+
 }
 
-/* ==================================
-   JOIN FREQUENCY
-================================== */
+
+/* =========================================
+   APPLY QUEUED ICE CANDIDATES
+========================================= */
+
+async function applyPendingCandidates(id) {
+
+    const peer = peers.get(id);
+
+    if (!peer) return;
+
+    const candidates = pendingCandidates.get(id) || [];
+
+    pendingCandidates.delete(id);
+
+    for (const candidate of candidates) {
+
+        try {
+
+            await peer.pc.addIceCandidate(candidate);
+
+        } catch (error) {
+
+            console.warn("Queued ICE error:", error);
+
+        }
+
+    }
+
+}
+
+
+/* =========================================
+   DISCOVER PARTICIPANTS
+========================================= */
+
+function discoverFrequency() {
+
+    sendSignal({
+        type: "discover"
+    });
+
+}
+
+
+/* =========================================
+   JOIN
+========================================= */
 
 async function joinFrequency() {
 
     if (joined) return;
 
-    const frequency = Number($("frequency").value);
+    if (typeof mqtt === "undefined") {
+
+        setStatus("MQTT library failed to load. Check your internet connection.");
+
+        return;
+
+    }
+
+    const frequency = Number(frequencyInput.value);
 
     if (
         !Number.isFinite(frequency) ||
         frequency < 1 ||
         frequency > 1000
     ) {
-        alert("Choose a frequency between 1 and 1000 MHz.");
+
+        setStatus("Frequency must be between 1 and 1000 MHz.");
+
         return;
+
     }
 
-    currentMode = $("mode").value;
+    myFrequency = frequency.toFixed(3);
 
-    if (currentMode === "voice") {
+    myMode = modeInput.value;
+
+
+    joinButton.disabled = true;
+
+    setStatus("Preparing radio...");
+
+
+    // Only Voice mode requests microphone access.
+
+    if (myMode === "voice") {
 
         try {
 
             localStream = await navigator.mediaDevices.getUserMedia({
-                audio: true
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                },
+                video: false
             });
 
             localStream.getAudioTracks().forEach(track => {
@@ -643,257 +1419,319 @@ async function joinFrequency() {
             });
 
         } catch (error) {
-            alert("Microphone access failed. Check browser permissions.");
+
+            joinButton.disabled = false;
+
+            setStatus(
+                "Microphone permission failed: " + error.message
+            );
+
             return;
+
         }
+
     }
 
-    room = frequency.toFixed(3);
-    topic = "omartalk/v1/" + room.replace(".", "_");
 
-    status("Connecting to signaling service...");
+    ensureAudioContext();
 
-    if (typeof mqtt === "undefined") {
-        status("MQTT library failed to load.");
+
+    // Connect to public MQTT signaling broker.
+
+    setStatus("Connecting to radio network...");
+
+    try {
+
+        mqttClient = mqtt.connect(MQTT_BROKER, {
+
+            clientId: "omartalk_" + makeId().replace(/-/g, "").slice(0, 20),
+
+            clean: true,
+
+            reconnectPeriod: 3000,
+
+            connectTimeout: 10000
+
+        });
+
+    } catch (error) {
+
+        stopLocalMedia();
+
+        joinButton.disabled = false;
+
+        setStatus("MQTT connection failed.");
+
         return;
+
     }
 
-    client = mqtt.connect(MQTT_SERVER, {
-        clientId: "omartalk_" + myId.replace(/-/g, ""),
-        clean: true,
-        reconnectPeriod: 3000,
-        connectTimeout: 10000
-    });
 
-    client.on("connect", () => {
+    mqttClient.on("connect", () => {
 
-        client.subscribe(topic, error => {
+        mqttClient.subscribe(getTopic(), { qos: 0 }, error => {
 
             if (error) {
-                status("Could not subscribe to frequency.");
+
+                setStatus("Unable to subscribe to frequency.");
+
                 return;
+
             }
 
             joined = true;
 
-            $("join").disabled = true;
-            $("leave").disabled = false;
-            $("frequency").disabled = true;
-            $("mode").disabled = true;
+            joinButton.classList.add("hidden");
 
-            $("voicePanel").hidden = currentMode !== "voice";
-            $("morsePanel").hidden = currentMode !== "morse";
+            leaveButton.classList.remove("hidden");
 
-            $("ptt").disabled = currentMode !== "voice";
+            modeInput.disabled = true;
 
-            status("Listening on " + room + " MHz");
+            frequencyInput.disabled = true;
 
-            // Ask existing phones to identify themselves.
-            sendSignal({
-                type: "discover"
-            });
+            voicePanel.classList.toggle("hidden", myMode !== "voice");
+
+            morsePanel.classList.toggle("hidden", myMode !== "morse");
+
+            pttButton.disabled = myMode !== "voice";
+
+            setStatus(
+                "Connected to " + myFrequency + " MHz",
+                true
+            );
+
+            setTimeout(discoverFrequency, 400);
+
         });
+
     });
 
-    client.on("message", (receivedTopic, payload) => {
+
+    mqttClient.on("message", (topic, payload) => {
+
+        if (topic !== getTopic()) return;
 
         try {
+
             const message = JSON.parse(payload.toString());
+
             handleSignal(message);
+
         } catch (error) {
-            console.error("Invalid signaling message", error);
+
+            console.warn("Invalid MQTT message", error);
+
         }
+
     });
 
-    client.on("error", error => {
-        status("Signaling error: " + error.message);
+
+    mqttClient.on("error", error => {
+
+        console.error("MQTT error:", error);
+
+        setStatus("Radio network error. Trying to reconnect...");
+
     });
 
-    client.on("offline", () => {
-        status("Signaling service offline.");
+
+    mqttClient.on("reconnect", () => {
+
+        setStatus("Reconnecting to radio network...");
+
     });
+
 }
 
-/* ==================================
-   LEAVE FREQUENCY
-================================== */
+
+/* =========================================
+   LEAVE
+========================================= */
+
+function stopLocalMedia() {
+
+    if (localStream) {
+
+        localStream.getTracks().forEach(track => {
+            track.stop();
+        });
+
+        localStream = null;
+
+    }
+
+}
+
 
 function leaveFrequency() {
 
-    if (client && client.connected) {
+    if (!joined && !mqttClient) return;
+
+    setPTT(false);
+
+    if (mqttClient && mqttClient.connected) {
+
         sendSignal({
             type: "bye"
         });
+
     }
 
-    for (const peerId of [...peers.keys()]) {
-        removePeer(peerId);
+    for (const id of [...peers.keys()]) {
+        removePeer(id);
     }
 
-    if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
-        localStream = null;
-    }
+    pendingCandidates.clear();
 
-    if (client) {
-        client.end(true);
-        client = null;
+    stopLocalMedia();
+
+    if (mqttClient) {
+
+        try {
+            mqttClient.end(true);
+        } catch (error) {}
+
+        mqttClient = null;
+
     }
 
     joined = false;
 
-    $("join").disabled = false;
-    $("leave").disabled = true;
-    $("frequency").disabled = false;
-    $("mode").disabled = false;
+    joinButton.disabled = false;
 
-    $("voicePanel").hidden = true;
-    $("morsePanel").hidden = true;
+    joinButton.classList.remove("hidden");
 
-    $("ptt").disabled = true;
+    leaveButton.classList.add("hidden");
 
-    status("Disconnected");
+    modeInput.disabled = false;
+
+    frequencyInput.disabled = false;
+
+    voicePanel.classList.add("hidden");
+
+    morsePanel.classList.add("hidden");
+
+    pttButton.disabled = true;
+
+    receivedMorse.innerHTML =
+        '<p class="small">Waiting for Morse transmissions...</p>';
+
+    setStatus("Disconnected");
+
 }
 
-/* ==================================
+
+/* =========================================
    PUSH TO TALK
-================================== */
+========================================= */
 
 function setPTT(active) {
 
-    if (!localStream) return;
+    if (!joined || myMode !== "voice" || !localStream) {
+        active = false;
+    }
 
-    localStream.getAudioTracks().forEach(track => {
-        track.enabled = active;
-    });
+    pttActive = active;
 
-    $("ptt").classList.toggle("active", active);
+    if (localStream) {
 
-    $("ptt").textContent = active
-        ? "TRANSMITTING..."
-        : "HOLD TO TALK";
+        localStream.getAudioTracks().forEach(track => {
+
+            track.enabled = active;
+
+        });
+
+    }
+
+    pttButton.classList.toggle("active", active);
+
+    pttButton.textContent =
+        active ? "🔴 TRANSMITTING" : "HOLD TO TALK";
+
 }
 
-$("ptt").addEventListener("pointerdown", event => {
+
+pttButton.addEventListener("pointerdown", event => {
+
     event.preventDefault();
+
+    if (!joined) return;
+
+    try {
+        pttButton.setPointerCapture(event.pointerId);
+    } catch (error) {}
+
     setPTT(true);
+
 });
 
-["pointerup", "pointercancel", "pointerleave"].forEach(type => {
-    $("ptt").addEventListener(type, () => setPTT(false));
+
+pttButton.addEventListener("pointerup", () => {
+
+    setPTT(false);
+
 });
 
-/* ==================================
-   MORSE TRANSMISSION
-================================== */
 
-function sendMorse() {
+pttButton.addEventListener("pointercancel", () => {
 
-    const message = $("morseInput").value.trim();
+    setPTT(false);
 
-    if (!message) return;
+});
 
-    const code = encodeMorse(message);
 
-    if (!code) {
-        alert("No supported characters found.");
-        return;
+window.addEventListener("pointerup", () => {
+
+    if (pttActive) {
+        setPTT(false);
     }
 
-    let sent = 0;
+});
 
-    for (const peer of peers.values()) {
 
-        if (
-            peer.channel &&
-            peer.channel.readyState === "open"
-        ) {
-            peer.channel.send(JSON.stringify({
-                type: "morse",
-                code
-            }));
+window.addEventListener("blur", () => {
 
-            sent++;
-        }
+    setPTT(false);
+
+});
+
+
+document.addEventListener("visibilitychange", () => {
+
+    if (document.hidden) {
+        setPTT(false);
     }
 
-    if (!sent) {
-        alert("No connected participants are ready.");
-        return;
-    }
+});
 
-    $("morseInput").value = "";
 
-    status("Morse transmission sent.");
-}
-
-/* ==================================
-   MORSE AUDIO
-================================== */
-
-function playMorse(code) {
-
-    const AudioContextClass =
-        window.AudioContext || window.webkitAudioContext;
-
-    if (!AudioContextClass) return;
-
-    const audio = new AudioContextClass();
-
-    audio.resume();
-
-    let time = audio.currentTime + 0.1;
-
-    const dotLength = 0.10;
-
-    function beep(duration) {
-
-        const oscillator = audio.createOscillator();
-        const gain = audio.createGain();
-
-        oscillator.frequency.value = 650;
-        gain.gain.value = 0.12;
-
-        oscillator.connect(gain);
-        gain.connect(audio.destination);
-
-        oscillator.start(time);
-        oscillator.stop(time + duration);
-
-        time += duration + dotLength;
-    }
-
-    for (const symbol of code) {
-
-        if (symbol === ".") {
-            beep(dotLength);
-        }
-
-        else if (symbol === "-") {
-            beep(dotLength * 3);
-        }
-
-        else if (symbol === " ") {
-            time += dotLength * 2;
-        }
-
-        else if (symbol === "/") {
-            time += dotLength * 5;
-        }
-    }
-
-    setTimeout(() => audio.close(), 15000);
-}
-
-/* ==================================
+/* =========================================
    BUTTONS
-================================== */
+========================================= */
 
-$("join").addEventListener("click", joinFrequency);
-$("leave").addEventListener("click", leaveFrequency);
-$("sendMorse").addEventListener("click", sendMorse);
+joinButton.addEventListener("click", joinFrequency);
 
-window.addEventListener("beforeunload", leaveFrequency);
+leaveButton.addEventListener("click", leaveFrequency);
+
+
+window.addEventListener("beforeunload", () => {
+
+    if (mqttClient && mqttClient.connected) {
+
+        sendSignal({
+            type: "bye"
+        });
+
+    }
+
+});
+
+
+/* =========================================
+   INITIALIZATION
+========================================= */
+
+setStatus("Disconnected");
 
 </script>
 
