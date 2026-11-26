@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OmarTalk</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background: #101820;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.app {
+    max-width: 500px;
+    margin: 25px auto;
+    padding: 22px;
+    background: #1c2935;
+    border: 1px solid #35495c;
+    border-radius: 16px;
+}
+
+h1 {
+    text-align: center;
+    color: #40d9a2;
+    margin-top: 0;
+}
+
+.subtitle {
+    text-align: center;
+    color: #a9bac8;
+}
+
+label {
+    display: block;
+    margin-top: 17px;
+    margin-bottom: 7px;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 13px;
+    border-radius: 8px;
+    border: 1px solid #526575;
+    font-size: 16px;
+}
+
+input, select {
+    background: #101820;
+    color: white;
+}
+
+button {
+    margin-top: 12px;
+    border: none;
+    background: #20b985;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.leave {
+    background: #bd4545;
+}
+
+.ptt {
+    background: #d64b4b;
+    height: 90px;
+    font-size: 22px;
+    border-radius: 50px;
+    touch-action: none;
+    user-select: none;
+}
+
+.ptt.active {
+    background: #20b985;
+}
+
+.status {
+    padding: 12px;
+    margin-top: 15px;
+    background: #101820;
+    border-radius: 8px;
+    color: #40d9a2;
+    overflow-wrap: anywhere;
+}
+
+.panel {
+    margin-top: 18px;
+    padding: 13px;
+    background: #101820;
+    border-radius: 8px;
+}
+
+.small {
+    color: #a9bac8;
+    font-size: 13px;
+}
+
+#received {
+    overflow-wrap: anywhere;
+    min-height: 25px;
+}
+
+audio {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+td, th {
+    padding: 7px;
+    border-bottom: 1px solid #35495c;
+    text-align: left;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1>📻 OmarTalk</h1>
+<p class="subtitle">Worldwide Internet Walkie-Talkie</p>
+
+<label for="frequency">Virtual Frequency (MHz)</label>
+<input id="frequency"
+       type="number"
+       min="1"
+       max="1000"
+       step="0.001"
+       value="145.500">
+
+<label for="mode">Transmission Mode</label>
+<select id="mode">
+    <option value="voice">Voice</option>
+    <option value="morse">Morse Code</option>
+</select>
+
+<button id="join">JOIN FREQUENCY</button>
+<button id="leave" class="leave" disabled>LEAVE FREQUENCY</button>
+
+<div class="status" id="status">
+    Status: Disconnected
+</div>
+
+<div class="panel">
+    <b>Participants</b>
+    <p id="participants">0 connected</p>
+    <p class="small">
+        Maximum 4 remote connections.
+    </p>
+</div>
+
+<div id="voicePanel" class="panel" hidden>
+    <b>Push To Talk</b>
+    <button id="ptt" class="ptt" disabled>
+        HOLD TO TALK
+    </button>
+    <p class="small">
+        Hold the button while speaking. Release to stop transmitting.
+    </p>
+</div>
+
+<div id="morsePanel" class="panel" hidden>
+    <b>Morse Transmission</b>
+
+    <label for="morseInput">Message to encode</label>
+    <input id="morseInput"
+           type="text"
+           maxlength="100"
+           placeholder="Type your message">
+
+    <button id="sendMorse">TRANSMIT MORSE</button>
+
+    <p class="small">
+        Your message is converted into Morse code before transmission.
+    </p>
+
+    <hr>
+
+    <b>Received Morse</b>
+    <p id="received">Nothing received yet.</p>
+
+    <b>Decoded Message</b>
+    <p id="decoded">---</p>
+</div>
+
+<div class="panel">
+    <b>Morse Learning Chart</b>
+
+    <table>
+        <tr><th>Letter</th><th>Code</th><th>Letter</th><th>Code</th></tr>
+        <tr><td>A</td><td>.-</td><td>N</td><td>-.</td></tr>
+        <tr><td>B</td><td>-...</td><td>O</td><td>---</td></tr>
+        <tr><td>C</td><td>-.-.</td><td>P</td><td>.--.</td></tr>
+        <tr><td>D</td><td>-..</td><td>Q</td><td>--.-</td></tr>
+        <tr><td>E</td><td>.</td><td>R</td><td>.-.</td></tr>
+        <tr><td>F</td><td>..-.</td><td>S</td><td>...</td></tr>
+        <tr><td>G</td><td>--.</td><td>T</td><td>-</td></tr>
+        <tr><td>H</td><td>....</td><td>U</td><td>..-</td></tr>
+        <tr><td>I</td><td>..</td><td>V</td><td>...-</td></tr>
+        <tr><td>J</td><td>.---</td><td>W</td><td>.--</td></tr>
+        <tr><td>K</td><td>-.-</td><td>X</td><td>-..-</td></tr>
+        <tr><td>L</td><td>.-..</td><td>Y</td><td>-.--</td></tr>
+        <tr><td>M</td><td>--</td><td>Z</td><td>--..</td></tr>
+    </table>
+</div>
+
+</div>
+
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+<script>
+/* ==================================
+   OMARTALK WEBRTC CONFIGURATION
+================================== */
+
+// Google STUN servers ONLY.
+const ICE_SERVERS = [
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" },
+    { urls: "stun:stun2.l.google.com:19302" },
+    { urls: "stun:stun3.l.google.com:19302" },
+    { urls: "stun:stun4.l.google.com:19302" }
+];
+
+// MQTT is used for signaling, not audio.
+const MQTT_SERVER = "wss://broker.emqx.io:8084/mqtt";
+
+const MAX_PEERS = 4;
+
+let client = null;
+let localStream = null;
+let myId = crypto.randomUUID();
+
+let room = "";
+let topic = "";
+let currentMode = "";
+let peers = new Map();
+let joined = false;
+
+const $ = id => document.getElementById(id);
+
+function status(message) {
+    $("status").textContent = "Status: " + message;
+}
+
+function updateParticipants() {
+    $("participants").textContent =
+        peers.size + " remote participant(s)";
+}
+
+/* ==================================
+   MORSE CODE
+================================== */
+
+const MORSE = {
+    A:".-", B:"-...", C:"-.-.", D:"-..",
+    E:".", F:"..-.", G:"--.", H:"....",
+    I:"..", J:".---", K:"-.-", L:".-..",
+    M:"--", N:"-.", O:"---", P:".--.",
+    Q:"--.-", R:".-.", S:"...", T:"-",
+    U:"..-", V:"...-", W:".--", X:"-..-",
+    Y:"-.--", Z:"--..",
+    0:"-----", 1:".----", 2:"..---",
+    3:"...--", 4:"....-", 5:".....",
+    6:"-....", 7:"--...", 8:"---..",
+    9:"----."
+};
+
+const REVERSE = {};
+
+for (const [letter, code] of Object.entries(MORSE)) {
+    REVERSE[code] = letter;
+}
+
+function encodeMorse(text) {
+    return text.toUpperCase()
+        .trim()
+        .split(/\s+/)
+        .map(word =>
+            [...word]
+                .map(char => MORSE[char] || "")
+                .filter(Boolean)
+                .join(" ")
+        )
+        .filter(Boolean)
+        .join(" / ");
+}
+
+function decodeMorse(code) {
+    return code.split(" / ")
+        .map(word =>
+            word.split(" ")
+                .map(letter => REVERSE[letter] || "")
+                .join("")
+        )
+        .join(" ");
+}
+
+/* ==================================
+   WEBRTC PEER CONNECTIONS
+================================== */
+
+function sendSignal(message) {
+    if (!client || !client.connected) return;
+
+    client.publish(topic, JSON.stringify({
+        ...message,
+        from: myId
+    }));
+}
+
+function createPeer(peerId, initiator) {
+
+    if (peers.has(peerId)) {
+        return peers.get(peerId);
+    }
+
+    if (peers.size >= MAX_PEERS) {
+        return null;
+    }
+
+    const pc = new RTCPeerConnection({
+        iceServers: ICE_SERVERS
+    });
+
+    const peer = {
+        pc,
+        channel: null,
+        candidates: [],
+        makingOffer: false
+    };
+
+    peers.set(peerId, peer);
+    updateParticipants();
+
+    // Audio handling
+    if (localStream) {
+        localStream.getTracks().forEach(track => {
+            pc.addTrack(track, localStream);
+        });
+    } else {
+        pc.addTransceiver("audio", {
+            direction: "recvonly"
+        });
+    }
+
+    pc.ontrack = event => {
+        const audio = document.createElement("audio");
+
+        audio.autoplay = true;
+        audio.playsInline = true;
+        audio.srcObject = event.streams[0];
+
+        document.body.appendChild(audio);
+
+        audio.play().catch(() => {
+            status("Tap the page to enable audio playback.");
+        });
+    };
+
+    // ICE candidate exchange
+    pc.onicecandidate = event => {
+        if (event.candidate) {
+            sendSignal({
+                type: "candidate",
+                to: peerId,
+                candidate: event.candidate
+            });
+        }
+    };
+
+    pc.onconnectionstatechange = () => {
+        status("Peer " + pc.connectionState);
+
+        if (
+            pc.connectionState === "failed" ||
+            pc.connectionState === "closed"
+        ) {
+            removePeer(peerId);
+        }
+    };
+
+    // DataChannel for Morse
+    if (initiator) {
+        const channel = pc.createDataChannel("omartalk-morse");
+        setupDataChannel(peerId, channel);
+    }
+
+    pc.ondatachannel = event => {
+        setupDataChannel(peerId, event.channel);
+    };
+
+    return peer;
+}
+
+function setupDataChannel(peerId, channel) {
+
+    const peer = peers.get(peerId);
+    if (!peer) return;
+
+    peer.channel = channel;
+
+    channel.onopen = () => {
+        status("Connected to participant");
+    };
+
+    channel.onmessage = event => {
+
+        let packet;
+
+        try {
+            packet = JSON.parse(event.data);
+        } catch {
+            return;
+        }
+
+        if (packet.type === "morse") {
+            $("received").textContent = packet.code;
+            $("decoded").textContent = decodeMorse(packet.code);
+            playMorse(packet.code);
+        }
+    };
+}
+
+async function startOffer(peerId) {
+
+    let peer = peers.get(peerId);
+
+    if (!peer) {
+        peer = createPeer(peerId, true);
+    }
+
+    if (!peer || peer.makingOffer) return;
+
+    peer.makingOffer = true;
+
+    try {
+
+        if (peer.pc.signalingState !== "stable") return;
+
+        const offer = await peer.pc.createOffer();
+
+        await peer.pc.setLocalDescription(offer);
+
+        sendSignal({
+            type: "offer",
+            to: peerId,
+            description: peer.pc.localDescription
+        });
+
+    } catch (error) {
+        console.error("Offer error:", error);
+    } finally {
+        peer.makingOffer = false;
+    }
+}
+
+async function handleOffer(message) {
+
+    const peer = createPeer(message.from, false);
+    if (!peer) return;
+
+    try {
+
+        await peer.pc.setRemoteDescription(message.description);
+
+        for (const candidate of peer.candidates) {
+            await peer.pc.addIceCandidate(candidate);
+        }
+
+        peer.candidates = [];
+
+        const answer = await peer.pc.createAnswer();
+
+        await peer.pc.setLocalDescription(answer);
+
+        sendSignal({
+            type: "answer",
+            to: message.from,
+            description: peer.pc.localDescription
+        });
+
+    } catch (error) {
+        console.error("Answer error:", error);
+    }
+}
+
+async function handleAnswer(message) {
+
+    const peer = peers.get(message.from);
+    if (!peer) return;
+
+    try {
+
+        await peer.pc.setRemoteDescription(message.description);
+
+        for (const candidate of peer.candidates) {
+            await peer.pc.addIceCandidate(candidate);
+        }
+
+        peer.candidates = [];
+
+    } catch (error) {
+        console.error("Answer processing error:", error);
+    }
+}
+
+async function handleCandidate(message) {
+
+    const peer = peers.get(message.from);
+    if (!peer) return;
+
+    try {
+
+        if (peer.pc.remoteDescription) {
+            await peer.pc.addIceCandidate(message.candidate);
+        } else {
+            peer.candidates.push(message.candidate);
+        }
+
+    } catch (error) {
+        console.error("ICE candidate error:", error);
+    }
+}
+
+function removePeer(peerId) {
+
+    const peer = peers.get(peerId);
+
+    if (peer) {
+        peer.pc.close();
+        peers.delete(peerId);
+    }
+
+    updateParticipants();
+}
+
+/* ==================================
+   SIGNALING / PARTICIPANT DISCOVERY
+================================== */
+
+function handleSignal(message) {
+
+    if (!message || message.from === myId) return;
+
+    if (message.to && message.to !== myId) return;
+
+    switch (message.type) {
+
+        case "discover":
+
+            // Reply so the joining phone can discover us.
+            sendSignal({
+                type: "hello",
+                to: message.from
+            });
+
+            // Deterministic offer selection prevents both sides
+            // from trying to initiate at the same time.
+            if (myId < message.from) {
+                startOffer(message.from);
+            }
+
+            break;
+
+        case "hello":
+
+            if (myId < message.from) {
+                startOffer(message.from);
+            }
+
+            break;
+
+        case "offer":
+            handleOffer(message);
+            break;
+
+        case "answer":
+            handleAnswer(message);
+            break;
+
+        case "candidate":
+            handleCandidate(message);
+            break;
+
+        case "bye":
+            removePeer(message.from);
+            break;
+    }
+}
+
+/* ==================================
+   JOIN FREQUENCY
+================================== */
+
+async function joinFrequency() {
+
+    if (joined) return;
+
+    const frequency = Number($("frequency").value);
+
+    if (
+        !Number.isFinite(frequency) ||
+        frequency < 1 ||
+        frequency > 1000
+    ) {
+        alert("Choose a frequency between 1 and 1000 MHz.");
+        return;
+    }
+
+    currentMode = $("mode").value;
+
+    if (currentMode === "voice") {
+
+        try {
+
+            localStream = await navigator.mediaDevices.getUserMedia({
+                audio: true
+            });
+
+            localStream.getAudioTracks().forEach(track => {
+                track.enabled = false;
+            });
+
+        } catch (error) {
+            alert("Microphone access failed. Check browser permissions.");
+            return;
+        }
+    }
+
+    room = frequency.toFixed(3);
+    topic = "omartalk/v1/" + room.replace(".", "_");
+
+    status("Connecting to signaling service...");
+
+    if (typeof mqtt === "undefined") {
+        status("MQTT library failed to load.");
+        return;
+    }
+
+    client = mqtt.connect(MQTT_SERVER, {
+        clientId: "omartalk_" + myId.replace(/-/g, ""),
+        clean: true,
+        reconnectPeriod: 3000,
+        connectTimeout: 10000
+    });
+
+    client.on("connect", () => {
+
+        client.subscribe(topic, error => {
+
+            if (error) {
+                status("Could not subscribe to frequency.");
+                return;
+            }
+
+            joined = true;
+
+            $("join").disabled = true;
+            $("leave").disabled = false;
+            $("frequency").disabled = true;
+            $("mode").disabled = true;
+
+            $("voicePanel").hidden = currentMode !== "voice";
+            $("morsePanel").hidden = currentMode !== "morse";
+
+            $("ptt").disabled = currentMode !== "voice";
+
+            status("Listening on " + room + " MHz");
+
+            // Ask existing phones to identify themselves.
+            sendSignal({
+                type: "discover"
+            });
+        });
+    });
+
+    client.on("message", (receivedTopic, payload) => {
+
+        try {
+            const message = JSON.parse(payload.toString());
+            handleSignal(message);
+        } catch (error) {
+            console.error("Invalid signaling message", error);
+        }
+    });
+
+    client.on("error", error => {
+        status("Signaling error: " + error.message);
+    });
+
+    client.on("offline", () => {
+        status("Signaling service offline.");
+    });
+}
+
+/* ==================================
+   LEAVE FREQUENCY
+================================== */
+
+function leaveFrequency() {
+
+    if (client && client.connected) {
+        sendSignal({
+            type: "bye"
+        });
+    }
+
+    for (const peerId of [...peers.keys()]) {
+        removePeer(peerId);
+    }
+
+    if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+    }
+
+    if (client) {
+        client.end(true);
+        client = null;
+    }
+
+    joined = false;
+
+    $("join").disabled = false;
+    $("leave").disabled = true;
+    $("frequency").disabled = false;
+    $("mode").disabled = false;
+
+    $("voicePanel").hidden = true;
+    $("morsePanel").hidden = true;
+
+    $("ptt").disabled = true;
+
+    status("Disconnected");
+}
+
+/* ==================================
+   PUSH TO TALK
+================================== */
+
+function setPTT(active) {
+
+    if (!localStream) return;
+
+    localStream.getAudioTracks().forEach(track => {
+        track.enabled = active;
+    });
+
+    $("ptt").classList.toggle("active", active);
+
+    $("ptt").textContent = active
+        ? "TRANSMITTING..."
+        : "HOLD TO TALK";
+}
+
+$("ptt").addEventListener("pointerdown", event => {
+    event.preventDefault();
+    setPTT(true);
+});
+
+["pointerup", "pointercancel", "pointerleave"].forEach(type => {
+    $("ptt").addEventListener(type, () => setPTT(false));
+});
+
+/* ==================================
+   MORSE TRANSMISSION
+================================== */
+
+function sendMorse() {
+
+    const message = $("morseInput").value.trim();
+
+    if (!message) return;
+
+    const code = encodeMorse(message);
+
+    if (!code) {
+        alert("No supported characters found.");
+        return;
+    }
+
+    let sent = 0;
+
+    for (const peer of peers.values()) {
+
+        if (
+            peer.channel &&
+            peer.channel.readyState === "open"
+        ) {
+            peer.channel.send(JSON.stringify({
+                type: "morse",
+                code
+            }));
+
+            sent++;
+        }
+    }
+
+    if (!sent) {
+        alert("No connected participants are ready.");
+        return;
+    }
+
+    $("morseInput").value = "";
+
+    status("Morse transmission sent.");
+}
+
+/* ==================================
+   MORSE AUDIO
+================================== */
+
+function playMorse(code) {
+
+    const AudioContextClass =
+        window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContextClass) return;
+
+    const audio = new AudioContextClass();
+
+    audio.resume();
+
+    let time = audio.currentTime + 0.1;
+
+    const dotLength = 0.10;
+
+    function beep(duration) {
+
+        const oscillator = audio.createOscillator();
+        const gain = audio.createGain();
+
+        oscillator.frequency.value = 650;
+        gain.gain.value = 0.12;
+
+        oscillator.connect(gain);
+        gain.connect(audio.destination);
+
+        oscillator.start(time);
+        oscillator.stop(time + duration);
+
+        time += duration + dotLength;
+    }
+
+    for (const symbol of code) {
+
+        if (symbol === ".") {
+            beep(dotLength);
+        }
+
+        else if (symbol === "-") {
+            beep(dotLength * 3);
+        }
+
+        else if (symbol === " ") {
+            time += dotLength * 2;
+        }
+
+        else if (symbol === "/") {
+            time += dotLength * 5;
+        }
+    }
+
+    setTimeout(() => audio.close(), 15000);
+}
+
+/* ==================================
+   BUTTONS
+================================== */
+
+$("join").addEventListener("click", joinFrequency);
+$("leave").addEventListener("click", leaveFrequency);
+$("sendMorse").addEventListener("click", sendMorse);
+
+window.addEventListener("beforeunload", leaveFrequency);
+
+</script>
+
+</body>
+</html>
