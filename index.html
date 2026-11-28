@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,9 +18,7 @@
     --danger: #ff6262;
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -45,9 +44,7 @@ header h1 {
     font-size: 32px;
 }
 
-header p {
-    color: var(--muted);
-}
+header p { color: var(--muted); }
 
 .card {
     background: var(--panel);
@@ -109,9 +106,7 @@ button:disabled {
     overflow-wrap: anywhere;
 }
 
-.status.online {
-    color: var(--accent);
-}
+.status.online { color: var(--accent); }
 
 #participants {
     list-style: none;
@@ -135,9 +130,7 @@ button:disabled {
     user-select: none;
 }
 
-.ptt.active {
-    background: #d94d4d;
-}
+.ptt.active { background: #d94d4d; }
 
 .small {
     color: var(--muted);
@@ -153,13 +146,9 @@ button:disabled {
     overflow-wrap: anywhere;
 }
 
-#receivedMorse p {
-    margin: 5px 0;
-}
+#receivedMorse p { margin: 5px 0; }
 
-.hidden {
-    display: none;
-}
+.hidden { display: none; }
 
 footer {
     text-align: center;
@@ -212,7 +201,6 @@ footer {
 
 </div>
 
-
 <div class="card">
 
     <h3>👥 Participants</h3>
@@ -222,7 +210,6 @@ footer {
     <ul id="participants"></ul>
 
 </div>
-
 
 <!-- VOICE TRANSMISSION -->
 
@@ -240,7 +227,6 @@ footer {
     </p>
 
 </div>
-
 
 <!-- MORSE TRANSMISSION -->
 
@@ -273,8 +259,7 @@ footer {
 
 </div>
 
-
-<!-- RECEIVED MORSE IS AVAILABLE IN BOTH MODES -->
+<!-- RECEIVED MORSE -->
 
 <div class="card">
 
@@ -285,7 +270,6 @@ footer {
     </div>
 
 </div>
-
 
 <div class="card">
 
@@ -303,7 +287,6 @@ footer {
     <div id="remoteAudio"></div>
 
 </div>
-
 
 <div class="card">
 
@@ -339,17 +322,14 @@ footer {
 
 </div>
 
-
 <footer>
     OmarTalk | WebRTC Internet Radio
 </footer>
 
 </div>
 
-
 <!-- MQTT SIGNALING LIBRARY -->
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-
 
 <script>
 
@@ -392,7 +372,6 @@ for (const [letter, code] of Object.entries(MORSE)) {
     REVERSE_MORSE[code] = letter;
 }
 
-
 /* =========================================
    ELEMENTS
 ========================================= */
@@ -421,7 +400,6 @@ const participantCount = $("participantCount");
 
 const remoteAudio = $("remoteAudio");
 
-
 /* =========================================
    STATE
 ========================================= */
@@ -446,6 +424,9 @@ const pendingCandidates = new Map();
 
 const disconnectTimers = new Map();
 
+// LIVE PARTICIPANT DISCOVERY
+const DISCOVERY_INTERVAL_MS = 3000;
+let discoveryTimer = null;
 
 function makeId() {
 
@@ -458,7 +439,6 @@ function makeId() {
         Date.now().toString(36);
 }
 
-
 /* =========================================
    STATUS
 ========================================= */
@@ -470,7 +450,6 @@ function setStatus(message, online = false) {
     statusBox.classList.toggle("online", online);
 
 }
-
 
 function updateParticipants() {
 
@@ -494,7 +473,6 @@ function updateParticipants() {
         peers.size + " / " + MAX_PEERS + " remote participants";
 
 }
-
 
 /* =========================================
    AUDIO
@@ -520,7 +498,6 @@ function ensureAudioContext() {
 
 }
 
-
 $("enableAudioButton").addEventListener("click", () => {
 
     ensureAudioContext();
@@ -530,7 +507,6 @@ $("enableAudioButton").addEventListener("click", () => {
     });
 
 });
-
 
 function attachRemoteAudio(id, stream) {
 
@@ -565,7 +541,6 @@ function attachRemoteAudio(id, stream) {
 
 }
 
-
 /* =========================================
    MORSE ENCODING
 ========================================= */
@@ -590,7 +565,6 @@ function encodeMorse(text) {
 
 }
 
-
 function decodeMorse(code) {
 
     return code
@@ -606,7 +580,6 @@ function decodeMorse(code) {
         .join(" ");
 
 }
-
 
 /* =========================================
    MORSE TONE PLAYBACK
@@ -690,7 +663,6 @@ function playMorse(code) {
 
 }
 
-
 /* =========================================
    RECEIVE MORSE
 ========================================= */
@@ -732,7 +704,6 @@ function receiveMorse(packet, sender) {
     playMorse(packet.code);
 
 }
-
 
 /* =========================================
    SEND MORSE
@@ -798,14 +769,12 @@ function transmitMorse() {
 
 }
 
-
 morseInput.addEventListener("input", () => {
 
     encodedPreview.textContent =
         encodeMorse(morseInput.value) || "...";
 
 });
-
 
 sendMorseButton.addEventListener("click", transmitMorse);
 
@@ -816,7 +785,6 @@ morseInput.addEventListener("keydown", event => {
     }
 
 });
-
 
 /* =========================================
    DATA CHANNEL
@@ -854,7 +822,6 @@ function setupDataChannel(peer, channel) {
 
 }
 
-
 /* =========================================
    PEER CONNECTION
 ========================================= */
@@ -885,7 +852,6 @@ function createPeer(id, remoteMode = "voice") {
 
     updateParticipants();
 
-
     // Voice users send audio.
     // Morse users receive audio only.
 
@@ -905,7 +871,6 @@ function createPeer(id, remoteMode = "voice") {
 
     }
 
-
     // Incoming voice
 
     pc.ontrack = event => {
@@ -917,7 +882,6 @@ function createPeer(id, remoteMode = "voice") {
         }
 
     };
-
 
     // ICE candidates
 
@@ -934,7 +898,6 @@ function createPeer(id, remoteMode = "voice") {
         }
 
     };
-
 
     // Connection state
 
@@ -987,9 +950,7 @@ function createPeer(id, remoteMode = "voice") {
 
     };
 
-
-    // DataChannel is received when the other participant
-    // created it while making their offer.
+    // Incoming DataChannel
 
     pc.ondatachannel = event => {
 
@@ -997,11 +958,9 @@ function createPeer(id, remoteMode = "voice") {
 
     };
 
-
     return peer;
 
 }
-
 
 /* =========================================
    REMOVE PEER
@@ -1041,7 +1000,6 @@ function removePeer(id) {
 
 }
 
-
 /* =========================================
    MQTT SIGNALING
 ========================================= */
@@ -1052,7 +1010,6 @@ function getTopic() {
         myFrequency.replace(".", "_");
 
 }
-
 
 function sendSignal(data) {
 
@@ -1077,7 +1034,6 @@ function sendSignal(data) {
     );
 
 }
-
 
 /* =========================================
    OFFER CREATION
@@ -1131,7 +1087,6 @@ async function startOffer(id) {
 
 }
 
-
 /* =========================================
    SIGNAL HANDLER
 ========================================= */
@@ -1141,7 +1096,6 @@ async function handleSignal(message) {
     if (!message || message.from === myId) return;
 
     if (message.to && message.to !== myId) return;
-
 
     // Someone entered our frequency.
 
@@ -1158,7 +1112,6 @@ async function handleSignal(message) {
         return;
 
     }
-
 
     // Exchange participant information.
 
@@ -1188,7 +1141,6 @@ async function handleSignal(message) {
         return;
 
     }
-
 
     // Incoming WebRTC offer.
 
@@ -1239,7 +1191,6 @@ async function handleSignal(message) {
 
     }
 
-
     // Incoming answer.
 
     if (message.type === "answer") {
@@ -1265,7 +1216,6 @@ async function handleSignal(message) {
         return;
 
     }
-
 
     // Incoming ICE candidate.
 
@@ -1303,7 +1253,6 @@ async function handleSignal(message) {
 
     }
 
-
     // Someone leaves.
 
     if (message.type === "bye") {
@@ -1313,7 +1262,6 @@ async function handleSignal(message) {
     }
 
 }
-
 
 /* =========================================
    APPLY QUEUED ICE CANDIDATES
@@ -1345,7 +1293,6 @@ async function applyPendingCandidates(id) {
 
 }
 
-
 /* =========================================
    DISCOVER PARTICIPANTS
 ========================================= */
@@ -1357,7 +1304,6 @@ function discoverFrequency() {
     });
 
 }
-
 
 /* =========================================
    JOIN
@@ -1393,11 +1339,9 @@ async function joinFrequency() {
 
     myMode = modeInput.value;
 
-
     joinButton.disabled = true;
 
     setStatus("Preparing radio...");
-
 
     // Only Voice mode requests microphone access.
 
@@ -1432,9 +1376,7 @@ async function joinFrequency() {
 
     }
 
-
     ensureAudioContext();
-
 
     // Connect to public MQTT signaling broker.
 
@@ -1465,7 +1407,6 @@ async function joinFrequency() {
         return;
 
     }
-
 
     mqttClient.on("connect", () => {
 
@@ -1500,12 +1441,27 @@ async function joinFrequency() {
                 true
             );
 
-            setTimeout(discoverFrequency, 400);
+            // LIVE DISCOVERY:
+            // Find existing participants immediately.
+            // Then check again every 3 seconds.
+
+            if (discoveryTimer) {
+                clearInterval(discoveryTimer);
+            }
+
+            discoverFrequency();
+
+            discoveryTimer = setInterval(() => {
+
+                if (joined && mqttClient && mqttClient.connected) {
+                    discoverFrequency();
+                }
+
+            }, DISCOVERY_INTERVAL_MS);
 
         });
 
     });
-
 
     mqttClient.on("message", (topic, payload) => {
 
@@ -1525,7 +1481,6 @@ async function joinFrequency() {
 
     });
 
-
     mqttClient.on("error", error => {
 
         console.error("MQTT error:", error);
@@ -1534,7 +1489,6 @@ async function joinFrequency() {
 
     });
 
-
     mqttClient.on("reconnect", () => {
 
         setStatus("Reconnecting to radio network...");
@@ -1542,7 +1496,6 @@ async function joinFrequency() {
     });
 
 }
-
 
 /* =========================================
    LEAVE
@@ -1562,10 +1515,16 @@ function stopLocalMedia() {
 
 }
 
-
 function leaveFrequency() {
 
     if (!joined && !mqttClient) return;
+
+    // Stop discovery when leaving.
+
+    if (discoveryTimer) {
+        clearInterval(discoveryTimer);
+        discoveryTimer = null;
+    }
 
     setPTT(false);
 
@@ -1620,7 +1579,6 @@ function leaveFrequency() {
 
 }
 
-
 /* =========================================
    PUSH TO TALK
 ========================================= */
@@ -1650,7 +1608,6 @@ function setPTT(active) {
 
 }
 
-
 pttButton.addEventListener("pointerdown", event => {
 
     event.preventDefault();
@@ -1665,20 +1622,17 @@ pttButton.addEventListener("pointerdown", event => {
 
 });
 
-
 pttButton.addEventListener("pointerup", () => {
 
     setPTT(false);
 
 });
 
-
 pttButton.addEventListener("pointercancel", () => {
 
     setPTT(false);
 
 });
-
 
 window.addEventListener("pointerup", () => {
 
@@ -1688,13 +1642,11 @@ window.addEventListener("pointerup", () => {
 
 });
 
-
 window.addEventListener("blur", () => {
 
     setPTT(false);
 
 });
-
 
 document.addEventListener("visibilitychange", () => {
 
@@ -1704,7 +1656,6 @@ document.addEventListener("visibilitychange", () => {
 
 });
 
-
 /* =========================================
    BUTTONS
 ========================================= */
@@ -1712,7 +1663,6 @@ document.addEventListener("visibilitychange", () => {
 joinButton.addEventListener("click", joinFrequency);
 
 leaveButton.addEventListener("click", leaveFrequency);
-
 
 window.addEventListener("beforeunload", () => {
 
@@ -1725,7 +1675,6 @@ window.addEventListener("beforeunload", () => {
     }
 
 });
-
 
 /* =========================================
    INITIALIZATION
